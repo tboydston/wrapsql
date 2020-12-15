@@ -1,0 +1,24 @@
+{
+  "name": "wrapsql",
+  "version": "0.0.1",
+  "description": "PDO style async wrapper for MySQL. Allows for implementing simple CRUD requests on a MySQL DB without writing any SQL. ",
+  "main": "wrapsql.js",
+  "scripts": {
+    "test": "mocha test --exit"
+  },
+  "keywords": [
+    "nodejs",
+    "mysql",
+    "pdo",
+    "wrapper"
+  ],
+  "author": "Tracey Boydston",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^8.2.1"
+  },
+  "dependencies": {
+    "chai": "^4.2.0",
+    "mysql": "^2.18.1"
+  }
+}
