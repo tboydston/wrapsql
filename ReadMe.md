@@ -1,4 +1,4 @@
-# WrapSQL 
+# WrapSQL ( wrapsequel )
 
 A MySQL wrapper that allows you to perform basic CRUD updates on a DB without writing any SQL. Results are returned as promises allowing the uses of 'await' when synchronous request are required. 
 <br><br>
@@ -7,7 +7,7 @@ A MySQL wrapper that allows you to perform basic CRUD updates on a DB without wr
 <br>
 
 ```
-npm install wrapsql 
+npm install wrapsequel 
 ```
 
 You can either pass Wrapsql an active MySQL connection or just the connection settings and Wrapsql will create it's own.
@@ -17,7 +17,7 @@ You can either pass Wrapsql an active MySQL connection or just the connection se
 <br>
 
 ```
-    const Wrapsql = require('wrapsql')
+    const Wrapsql = require('wrapsequel')
 
     const config = {
         host: '127.0.0.1',
@@ -39,7 +39,7 @@ You can either pass Wrapsql an active MySQL connection or just the connection se
 
 ```
     const mysql = require('mysql')
-    const Wrapsql = require('wrapsql')
+    const Wrapsql = require('wrapsequel')
 
     const sql = mysql.createConnection({
         host: '127.0.0.1',
