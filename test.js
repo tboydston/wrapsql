@@ -168,7 +168,7 @@ describe('WrapSQL Unit Tests', async function() {
         
     })
 
-    it('Should reject becasue of invalid sql.', async function() {
+    it('Should reject because of invalid sql.', async function() {
 
         let queries = [
             "SELECT * FROM testTable ORDER BY id DESC",

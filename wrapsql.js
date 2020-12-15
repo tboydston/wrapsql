@@ -138,7 +138,7 @@ class Wrapsql {
      * @param {object} where Values conditions to determine which rows to delete.
      * @param {string} as Label for the result
      */
-    async count(table,where,as='count'){
+    async count(table,where=false,as='count'){
 
         let query = `SELECT COUNT(*) AS ${as} FROM ${table} ` + this.addOptions(where)
         return this.runQuery(query)
