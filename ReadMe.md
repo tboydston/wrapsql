@@ -17,7 +17,7 @@ You can either pass Wrapsql an active MySQL connection or just the connection se
 <br>
 
 ```
-    const Wrapsql = require('./wrapsql.js')
+    const Wrapsql = require('wrapsql')
 
     const config = {
         host: '127.0.0.1',
@@ -38,6 +38,8 @@ You can either pass Wrapsql an active MySQL connection or just the connection se
 <br>
 
 ```
+    const mysql = require('mysql')
+    const Wrapsql = require('wrapsql')
 
     const sql = mysql.createConnection({
         host: '127.0.0.1',

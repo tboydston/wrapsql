@@ -1,7 +1,7 @@
 {
   "name": "wrapsql",
   "version": "0.0.1",
-  "description": "PDO style async wrapper for MySQL. Allows for implementing simple CRUD requests on a MySQL DB without writing any SQL. ",
+  "description": "A MySQL wrapper that allows you to perform basic CRUD updates on a DB without writing any SQL. Results are returned as promises allowing the uses of 'await' when synchronous request are required.",
   "main": "wrapsql.js",
   "scripts": {
     "test": "mocha test --exit"
