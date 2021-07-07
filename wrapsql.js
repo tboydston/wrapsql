@@ -79,22 +79,50 @@ class Wrapsql {
     /**
      * Insert data into a table.
      * @param {string} table Table name.
-     * @param {object} insert Insert values.
+     * @param {object/array} insert Insert values. Insert multiple rows be submitting an array of insert values.
      */
     async insert(table,insert){
 
         let query = `INSERT INTO ${table} (`
         
-        for (let property in insert) {
-            query += `${property}, `
+        if( Array.isArray(insert) ){
+
+            for (let property in insert[0]) {
+                query += `${property}, `
+            }
+            query = query.substring(0, query.length - 2)
+            
+            query += `) VALUES `
+
+            insert.forEach(insertValues => {
+
+                query += `(`
+                
+                for (let property in insertValues) {
+                    query += `${this.formatString(insertValues[property])}, `
+                }
+                query = query.substring(0, query.length - 2)
+
+                query += `),`
+
+            })
+
+            query = query.substring(0, query.length - 1)
+
+        } else {
+
+            for (let property in insert) {
+                query += `${property}, `
+            }
+            query = query.substring(0, query.length - 2)
+
+            query += `) VALUES (`
+            for (let property in insert) {
+                query += `${this.formatString(insert[property])}, `
+            }
+            query = query.substring(0, query.length - 2)
+            query += `) `
         }
-        query = query.substring(0, query.length - 2)
-        query += `) VALUES (`
-        for (let property in insert) {
-            query += `${this.formatString(insert[property])}, `
-        }
-        query = query.substring(0, query.length - 2)
-        query += `) `
 
         return this.runQuery(query)
 

@@ -110,13 +110,15 @@ Select data from a table. <br><br>
 
 Insert data into a table. <br><br>
 **table:** Table to select from.<br>
-**insert:** Object of values to insert {column:"value"} <br>
+**insert:** Object of values to insert {column:"value"} or array of Objects to insert multiple rows.<br>
 
 ### Example
 
 ```
-
+    // Single row insert.
     let result = await wsql.insert('insertTest',{testData:"testInsert"})
+    // Multiple row insert.
+    let result2 = await wsql.insert('insertTest',[{testData:"testInsert1"},{testData:"testInsert2"}])
 
 ```
 
@@ -188,7 +190,7 @@ Count rows in result.<br><br>
 
 <br>
 
-Submit an array of dependant SQL queries to be executed in one request.. If one fails they are all rolled back. Results is returned as array of arrays.<br><br>
+Submit an array of dependant SQL queries to be executed in one request. If one fails they are all rolled back. Results is returned as array of arrays.<br><br>
 **queries:** Array of SQL queries.<br>
 
 ### Example

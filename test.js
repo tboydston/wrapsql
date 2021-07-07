@@ -116,6 +116,13 @@ describe('WrapSQL Unit Tests', async function() {
         
     })
 
+    it('Should insert multiple users into insert table.', async function() {
+        
+        let result = await wsql.insert('insertTest',[{value:"testInsert2"},{value:"testInsert3"}])
+        expect(result.affectedRows).to.equal(2)
+        
+    })
+
   })
   
   describe('update', async function() {
