@@ -287,7 +287,7 @@ class Wrapsql {
     }
 
     formatString(property){
-        return (Number.isInteger(property))?property:("'"+property+"'")
+        return (Number.isInteger(property))?property:(`'`+property.replace(/'/g,`''`)+`'`)
     }
 
 }

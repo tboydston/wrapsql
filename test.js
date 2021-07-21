@@ -102,7 +102,7 @@ describe('WrapSQL Unit Tests', async function() {
 
   describe('insert', async function() {
     
-    it('Should insert new user into insert table.', async function() {
+    it('Should insert new value into insert table.', async function() {
         
         let result = await wsql.insert('insertTest',{value:"testInsert"})
         expect(result.affectedRows).to.equal(1)
@@ -116,10 +116,20 @@ describe('WrapSQL Unit Tests', async function() {
         
     })
 
-    it('Should insert multiple users into insert table.', async function() {
+    it('Should insert multiple values into insert table.', async function() {
         
         let result = await wsql.insert('insertTest',[{value:"testInsert2"},{value:"testInsert3"}])
         expect(result.affectedRows).to.equal(2)
+        
+    })
+
+    it(`Should insert values into insert table that contain "'" and escape them correctly.`, async function() {
+        
+        let insertValue = "te'st''In'se'rt"
+        let insertResult = await wsql.insert('insertTest',{value:insertValue})
+        let selectResult = await wsql.select('insertTest','value',{value:insertValue})
+
+        expect(selectResult[0].value).to.equal(insertValue)
         
     })
 
