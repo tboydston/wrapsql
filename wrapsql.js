@@ -255,7 +255,7 @@ class Wrapsql {
 
     /**
      * Adds options to end of SQL string.
-     * @param {string} where Object of where conditions.
+     * @param {obj} where Object of where conditions.
      * @param {string} orderBy Column you would like to order by. 
      * @param {string} order Order of results ('ASC','DESC'). 
      * @param {int} limit Number of results to return.
@@ -267,13 +267,17 @@ class Wrapsql {
 
         if ( where ) {
 
-            query += ` WHERE `
- 
-            for (let property in where) {
-                query += `${property} = ${this.formatString(where[property])} AND `
-            }
+            if ( where.comparisonType === "AND" || where.comparisonType === undefined ) {
 
-            query = query.substring(0, query.length - 4)
+                query += ` WHERE `
+    
+                for (let property in where) {
+                    query += `${property} = ${this.formatString(where[property])} AND `
+                }
+
+                query = query.substring(0, query.length - 4)
+
+            }
 
        }
 
