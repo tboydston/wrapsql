@@ -17,20 +17,20 @@ You can either pass Wrapsql an active MySQL connection or just the connection se
 <br>
 
 ```
-    const Wrapsql = require('wrapsequel')
+const Wrapsql = require('wrapsequel')
 
-    const config = {
-        host: '127.0.0.1',
-        port: '8889',
-        user: 'user',
-        password: 'password',
-        database: 'database'
-    }
+const config = {
+    host: '127.0.0.1',
+    port: '8889',
+    user: 'user',
+    password: 'password',
+    database: 'database'
+}
 
-    const wsql = new Wrapsql(config,true)
-    
-    let result = await wsql.selectAll('testTable')
-    console.log( result )
+const wsql = new Wrapsql(config,true)
+
+let result = await wsql.selectAll('testTable')
+console.log( result )
 
 ```
 
@@ -38,21 +38,21 @@ You can either pass Wrapsql an active MySQL connection or just the connection se
 <br>
 
 ```
-    const mysql = require('mysql')
-    const Wrapsql = require('wrapsequel')
+const mysql = require('mysql')
+const Wrapsql = require('wrapsequel')
 
-    const sql = mysql.createConnection({
-        host: '127.0.0.1',
-        port: '8889',
-        user: 'user',
-        password: 'password',
-        database: 'database'
-    }) 
+const sql = mysql.createConnection({
+    host: '127.0.0.1',
+    port: '8889',
+    user: 'user',
+    password: 'password',
+    database: 'database'
+}) 
 
-    const wsql = new Wrapsql(sql,true)
+const wsql = new Wrapsql(sql,true)
 
-    let result = await wsql.selectAll('testTable')
-    console.log( result )
+let result = await wsql.selectAll('testTable')
+console.log( result )
 
 ```
 <br><br>
@@ -73,7 +73,7 @@ Select all results from a table.
 
 ```
 
-    let result = await wsql.selectAll('testTable')
+let result = await wsql.selectAll('testTable')
 
 ```
 
@@ -87,14 +87,14 @@ Select all results from a table.
 Select data from a table. <br><br>
 **table:** Table to select from.<br>
 **columns:** Accepts either an array of columns to return or '*' to return all columns. <br>
-**where:** Object of where conditions, Array defining custom comparison, or string of customer where conditions. Default comparison is 'AND' default operator '='. See  examples below for details.). May Be False to exclude.<br>
+**where:** Object of where conditions, Array defining custom comparison, or string of custom where conditions. Default comparison is 'AND' default operator '='. See  examples below for details.). May Be False to exclude.<br>
 **orderBy:** Column you would like to order by.  May Be False to exclude.<br>
 **order:** Order of results ('ASC','DESC').  May Be False to exclude.<br>
 **limit:** Number of results to return.  May Be False to exclude.<br>
 **offset:** Number of rows to offset before return results.  May Be False to exclude.<br>
 **groupBy:** Column to group results by.  May Be False to exclude.<br>
 
-###**where:** comparisons can be represented the following ways. 
+**where:** comparisons can be represented the following ways. 
 
 ```
 
@@ -144,10 +144,10 @@ Insert data into a table. <br><br>
 ### Example
 
 ```
-    // Single row insert.
-    let result = await wsql.insert('insertTest',{testData:"testInsert"})
-    // Multiple row insert.
-    let result2 = await wsql.insert('insertTest',[{testData:"testInsert1"},{testData:"testInsert2"}])
+// Single row insert.
+let result = await wsql.insert('insertTest',{testData:"testInsert"})
+// Multiple row insert.
+let result2 = await wsql.insert('insertTest',[{testData:"testInsert1"},{testData:"testInsert2"}])
 
 ```
 
@@ -168,7 +168,7 @@ Update records <br><br>
 
 ```
 
-    let result = await wsql.update('insertTest',{value:'updated'},{value:'1'})
+let result = await wsql.update('insertTest',{value:'updated'},{value:'1'})
 
 ```
 
@@ -187,7 +187,7 @@ Delete records. <br><br>
 
 ```
 
-    let result = await wsql.delete('insertTest',{value:'1'})
+let result = await wsql.delete('insertTest',{value:'1'})
 
 ```
 
@@ -208,7 +208,7 @@ Count rows in result.<br><br>
 
 ```
 
-    let result = await wsql.delete('testTable',{value:'testRow2'},'theCount')
+let result = await wsql.delete('testTable',{value:'testRow2'},'theCount')
 
 ```
 
@@ -226,15 +226,15 @@ Submit an array of dependant SQL queries to be executed in one request. If one f
 
 ```
 
-        let queries = [
-            "SELECT * FROM testTable ORDER BY id DESC",
-            "SELECT * FROM testTable",
-        ]
-        
-        let result = await wsql.transaction(queries)
+    let queries = [
+        "SELECT * FROM testTable ORDER BY id DESC",
+        "SELECT * FROM testTable",
+    ]
 
-        // result[0] first queries results. 
-        // result[1] second queries results.   
+    let result = await wsql.transaction(queries)
+
+    // result[0] first queries results. 
+    // result[1] second queries results.   
 
 ```
 
@@ -252,9 +252,9 @@ Pass through a raw SQL query.<br><br>
 
 ```
 
-        let query = "SELECT * FROM testTable ORDER BY id DESC"
-        
-        let result = await wsql.transaction(query)
+let query = "SELECT * FROM testTable ORDER BY id DESC"
+
+let result = await wsql.transaction(query)
 
 
 ```
