@@ -268,8 +268,7 @@ class Wrapsql {
         if ( where ) {
 
             query += ` WHERE `
-
-            Number.isInteger(123) 
+ 
             for (let property in where) {
                 query += `${property} = ${this.formatString(where[property])} AND `
             }
