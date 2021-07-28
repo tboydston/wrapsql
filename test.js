@@ -65,10 +65,38 @@ describe('WrapSQL Unit Tests', async function() {
 
   describe('addOptions', async function() {
     
-    it('Should create valid sql string with options.', async function() {
+    it(`Should create valid sql string with with default 'AND' comparison options.`, async function() {
 
         let result = wsql.addOptions({user:"bill",pass:"test",id:1},'id','DESC',10,1)
         expect(result).to.equal(" WHERE user = 'bill' AND pass = 'test' AND id = 1  ORDER BY id DESC LIMIT 10 OFFSET 1")
+        
+    })
+
+    it(`Should create valid sql string with 'OR' comparison and options.`, async function() {
+
+        let result = wsql.addOptions(["or",{user:"bill",pass:"test",id:1}],'id','DESC',10,1)
+        expect(result).to.equal(" WHERE user = 'bill' OR pass = 'test' OR id = 1  ORDER BY id DESC LIMIT 10 OFFSET 1")
+        
+    })
+
+    it(`Should create valid sql string with 'IN' comparison and options.`, async function() {
+
+        let result = wsql.addOptions(["IN",{user:[1,"bill","bill's"]}],'id','DESC',10,1)
+        expect(result).to.equal(" WHERE user IN ('1,bill,bill''s')  ORDER BY id DESC LIMIT 10 OFFSET 1")
+        
+    })
+
+    it(`Should create valid sql string with with default 'AND' comparison and customer '>' and '<' operators options.`, async function() {
+
+        let result = wsql.addOptions({user:[">","bill"],pass:["<","test"],id:1},'id','DESC',10,1)
+        expect(result).to.equal(" WHERE user > 'bill' AND pass < 'test' AND id = 1  ORDER BY id DESC LIMIT 10 OFFSET 1")
+        
+    })
+
+    it(`Should return customer 'where' string.`, async function() {
+
+        let result = wsql.addOptions('user=bob AND dog IS NOT null AND black != white','id','DESC',10,1)
+        expect(result).to.equal(" WHERE user=bob AND dog IS NOT null AND black != white ORDER BY id DESC LIMIT 10 OFFSET 1")
         
     })
 
@@ -85,14 +113,30 @@ describe('WrapSQL Unit Tests', async function() {
 
     it('Should return testRow2 as first result.', async function() {
 
-        let result = await wsql.select('testTable','value',false,orderBy='id',"DESC",10,offset=false)
+        let result = await wsql.select('testTable','value',false,orderBy='id',"DESC",10,offset=false,"id")
         expect(result[0].value).to.equal("testRow2")
         
     })
-    //table,columns,where,orderBy=false,order='ASC',limit=false,offset=false
+    
     it('Should return testRow2 using limit and offset.', async function() {
 
         let result = await wsql.select('testTable','value',false,'id',"DESC",1,0)
+        
+        expect(result[0].value).to.equal("testRow2")
+        
+    })
+
+    it(`Should return testRow2 using '>' operator.`, async function() {
+
+        let result = await wsql.select('testTable','value',{id:[">",1]},'id',"DESC",1,0)
+        
+        expect(result[0].value).to.equal("testRow2")
+        
+    })
+
+    it(`Should return testRow2 using 'IN' comparison.`, async function() {
+
+        let result = await wsql.select('testTable','value',['IN',{id:[2]}],'id',"DESC",1,0)
         
         expect(result[0].value).to.equal("testRow2")
         

@@ -87,19 +87,48 @@ Select all results from a table.
 Select data from a table. <br><br>
 **table:** Table to select from.<br>
 **columns:** Accepts either an array of columns to return or '*' to return all columns. <br>
-**where:** Object of where conditions. May Be False<br>
-**orderBy:** Column you would like to order by.  May Be False<br>
-**order:** Order of results ('ASC','DESC').  May Be False<br>
-**limit:** Number of results to return.  May Be False<br>
-**offset:** Number of rows to offset before return results.  May Be False<br><br>
+**where:** Object of where conditions, Array defining custom comparison, or string of customer where conditions. Default comparison is 'AND' default operator '='. See  examples below for details.). May Be False to exclude.<br>
+**orderBy:** Column you would like to order by.  May Be False to exclude.<br>
+**order:** Order of results ('ASC','DESC').  May Be False to exclude.<br>
+**limit:** Number of results to return.  May Be False to exclude.<br>
+**offset:** Number of rows to offset before return results.  May Be False to exclude.<br>
+**groupBy:** Column to group results by.  May Be False to exclude.<br>
+
+###**where:** comparisons can be represented the following ways. 
+
+```
+
+// Default 'AND' comparison
+{column1:value,colum2:value}
+// SQL Result: WHERE column1=value AND column2:value
+
+// Defined 'AND' comparison 
+["AND",{column1:value,colum2:value}]
+// SQL Result: WHERE column1=value AND column2:value
+
+// Defined 'OR' comparison 
+["OR",{column1:value,colum2:value}]
+// SQL Result: WHERE column1=value OR column2:value
+
+// Defined 'IN' comparison 
+["IN",{column1:[value1,value2]}]
+// SQL Result: WHERE column1 IN ('value1','value2')
+
+// Defined operator 
+{column1:[">",value],colum2:["<",value]}
+// SQL Result: WHERE column1>value AND column2<value
+
+// Customer WHERE string 
+`column1>value AND column2 IS NOT null OR column2 = 'test'`
+// SQL Result: WHERE column1>value AND column2 IS NOT null OR column2 = 'test'
+
+```
 
 ### Example
 
 ```
-
-    let result = await wsql.select('testTable','value',{value:"testRow2"},false,"DESC",10,offset=false)
-
-
+    // Equivalent SQL: SELECT 'value' FROM 'testTable' WHERE value='testValue' GROUP BY 'value' ORDER BY 'id' DESC LIMIT 10
+    let result = await wsql.select('testTable','value',{value:"testValue"},"id","DESC",10,offset=false,value)
 ```
 
 <br>

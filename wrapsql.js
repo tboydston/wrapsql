@@ -57,7 +57,7 @@ class Wrapsql {
      * @param {int} limit Number of results to return.
      * @param {int} offset Number of rows to offset before return results. 
      */
-    async select(table,columns,where,orderBy=false,order='ASC',limit=false,offset=false){
+    async select(table,columns,where,orderBy=false,order='ASC',limit=false,offset=false,groupBy=false){
 
         let query = `SELECT `
 
@@ -70,7 +70,7 @@ class Wrapsql {
             query += ` * FROM ${table} `
         }
 
-        query += this.addOptions(where,orderBy,order,limit,offset)
+        query += this.addOptions(where,orderBy,order,limit,offset,groupBy)
 
         return this.runQuery(query)
 
@@ -255,42 +255,80 @@ class Wrapsql {
 
     /**
      * Adds options to end of SQL string.
-     * @param {obj} where Object of where conditions.
+     * @param {bool,obj,array} where Can either be an object which defaults to "AND" comparison type of an array of formant ["comparisonType",{{row:value},{row:value}}]
      * @param {string} orderBy Column you would like to order by. 
      * @param {string} order Order of results ('ASC','DESC'). 
      * @param {int} limit Number of results to return.
      * @param {int} offset Number of rows to offset before return results. 
+     * @param {string} groupBy Value to group results by.  
      */
-    addOptions(where=false,orderBy=false,order='DESC',limit=false,offset=false){
+    addOptions(where=false,orderBy=false,order='DESC',limit=false,offset=false,groupBy=false){
 
         let query = ""
+        let comparisonType = "AND"
 
         if ( where ) {
 
-            if ( where.comparisonType === "AND" || where.comparisonType === undefined ) {
+            if ( typeof where === "string" ){
+                query += ` WHERE ${where}`
+            } else {
 
                 query += ` WHERE `
-    
-                for (let property in where) {
-                    query += `${property} = ${this.formatString(where[property])} AND `
+
+                if ( Array.isArray(where) ){
+                    comparisonType = where[0].toUpperCase()
+                    where = where[1]
                 }
 
-                query = query.substring(0, query.length - 4)
+                if ( comparisonType === "AND" || comparisonType === "OR" ) {
+
+                    for (let property in where) {
+
+                        let operator = "="
+                        let value = where[property]
+
+                        if ( Array.isArray(value) ){
+                            operator = value[0]
+                            value = value[1]
+                        }
+
+                        query += `${property} ${operator} ${this.formatString(value)} ${comparisonType} `
+                    }
+
+                    query = query.substring(0, query.length - (comparisonType.length+1))
+                    console.log(query)
+                }
+
+                if ( comparisonType === "IN" ) {
+
+
+                    for (let property in where) {
+                        query += `${property} IN (${this.formatString(where[property].join(","))}) `
+                    }
+
+                }
 
             }
 
        }
 
+        query += (groupBy) ? ` GROUP BY ${groupBy}` : ''
         query += (orderBy) ? ` ORDER BY ${orderBy} ${order}` : ''
         query += (limit) ? ` LIMIT ${limit}` : ''
         query += (offset) ? ` OFFSET ${offset}` : ''
+
 
         return query
 
     }
 
-    formatString(property){
-        return (Number.isInteger(property))?property:(`'`+property.replace(/'/g,`''`)+`'`)
+    /**
+     * Escapes "'" character form string if value is not an integer.
+     * @param {string} value 
+     * @returns 
+     */
+    formatString(value){
+        return (Number.isInteger(value))?value:(`'`+value.replace(/'/g,`''`)+`'`)
     }
 
 }
