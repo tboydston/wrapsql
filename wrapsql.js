@@ -296,7 +296,7 @@ class Wrapsql {
                     }
 
                     query = query.substring(0, query.length - (comparisonType.length+1))
-                    console.log(query)
+
                 }
 
                 if ( comparisonType === "IN" ) {

@@ -1,6 +1,6 @@
 {
   "name": "wrapsequel",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A MySQL wrapper that allows you to perform basic CRUD updates on a DB without writing any SQL. Results are returned as promises allowing the uses of 'await' when synchronous request are required.",
   "main": "wrapsql.js",
   "scripts": {
