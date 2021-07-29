@@ -161,14 +161,28 @@ class Wrapsql {
     }
 
     /**
-     * 
+     * Count rows in table.
      * @param {string} table Table name.
      * @param {object} where Values conditions to determine which rows to delete.
      * @param {string} as Label for the result
      */
     async count(table,where=false,as='count'){
 
-        let query = `SELECT COUNT(*) AS ${as} FROM ${table} ` + this.addOptions(where)
+        let query = `SELECT COUNT(*) AS ${as} FROM ${table} ${this.addOptions(where)}`
+        return this.runQuery(query)
+
+    }
+
+
+    /**
+     * Truncate table.
+     * @param {string} table Table name.
+     * @param {object} where Values conditions to determine which rows to delete.
+     * @param {string} as Label for the result
+     */
+    async truncate(table){
+
+        let query = `TRUNCATE TABLE ${table}`
         return this.runQuery(query)
 
     }
@@ -303,7 +317,16 @@ class Wrapsql {
 
 
                     for (let property in where) {
-                        query += `${property} IN (${this.formatString(where[property].join(","))}) `
+ 
+                        let formattedArray = []
+
+                        where[property].forEach(entry => {
+                            formattedArray.push(this.formatString(entry))
+                        });
+
+                        formattedArray = formattedArray.join(",")
+
+                        query += `${property} IN (${formattedArray}) `
                     }
 
                 }

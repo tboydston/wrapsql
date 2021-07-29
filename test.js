@@ -82,7 +82,7 @@ describe('WrapSQL Unit Tests', async function() {
     it(`Should create valid sql string with 'IN' comparison and options.`, async function() {
 
         let result = wsql.addOptions(["IN",{user:[1,"bill","bill's"]}],'id','DESC',10,1)
-        expect(result).to.equal(" WHERE user IN ('1,bill,bill''s')  ORDER BY id DESC LIMIT 10 OFFSET 1")
+        expect(result).to.equal(" WHERE user IN (1,'bill','bill''s')  ORDER BY id DESC LIMIT 10 OFFSET 1")
         
     })
 
@@ -183,8 +183,15 @@ describe('WrapSQL Unit Tests', async function() {
     
     it('Should update first record in insert table.', async function() {
         
-        let result = await wsql.update('insertTest',{value:'updated'},{value:'1'})
+        let result = await wsql.update('insertTest',{value:'updated'},{id:1})
         expect(result.affectedRows).to.equal(1)
+        
+    })
+
+    it('Should update 2nd and 3rd record in insert table.', async function() {
+        
+        let result = await wsql.update('insertTest',{value:'updated'},["IN",{id:[2,3]}])
+        expect(result.affectedRows).to.equal(2)
         
     })
 
@@ -195,7 +202,7 @@ describe('WrapSQL Unit Tests', async function() {
     it('Should delete record.', async function() {
         
         let result = await wsql.delete('insertTest',{value:'updated'})
-        expect(result.affectedRows).to.equal(1)
+        expect(result.affectedRows).to.equal(3)
         
     })
 
@@ -205,7 +212,7 @@ describe('WrapSQL Unit Tests', async function() {
     
     it('Should count number of records.', async function() {
         
-        let result = await wsql.count('testTable',{value:'testRow2'},'theCount')
+        let result = await wsql.count('testTable',{value:'testRow1'},'theCount')
         console.log(result)
         expect(result[0].theCount).to.equal(1)
         
@@ -219,13 +226,13 @@ describe('WrapSQL Unit Tests', async function() {
 
         let queries = [
             "SELECT * FROM testTable ORDER BY id DESC",
-            "SELECT * FROM testTable",
+            "SELECT * FROM testTable ORDER BY id ASC",
         ]
         
         let result = await wsql.transaction(queries)
 
-        expect(result[0][0].id).to.equal(2)
-        expect(result[0][1].id).to.equal(1)
+        expect(result[0][0].id).to.equal(3)
+        expect(result[1][0].id).to.equal(1)
         
     })
 
@@ -264,5 +271,14 @@ describe('WrapSQL Unit Tests', async function() {
     })
 
   })
+
+
+  after(async function() {
+
+    await wsql.truncate("insertTest")
+
+  })
+
+ 
 
 })
