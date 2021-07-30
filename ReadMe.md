@@ -11,8 +11,8 @@ npm install wrapsequel
 ```
 
 You can either pass Wrapsql an active MySQL connection or just the connection settings and Wrapsql will create it's own.
-<br>
-<br>
+
+
 ### Wrapsql builds MySQL connection
 <br>
 
@@ -55,7 +55,92 @@ let result = await wsql.selectAll('testTable')
 console.log( result )
 
 ```
-<br><br>
+
+### CRUD Example
+
+Below is an example for of how to insert, select, update, and delete a record. 
+
+```
+
+
+let insertResult = await wsql.insert("customers",{firstName:"Bob",lastName:"Smith",favoriteAnimal:"dog"})
+// Equivalent SQL: INSERT INTO customers (firstName, lastName, favoriteAnimal) VALUES ('Bob', 'Smith', 'dog') 
+
+// Insert Result:  {
+//   fieldCount: 0,
+//   affectedRows: 1,
+//   insertId: 1,
+//   serverStatus: 2,
+//   warningCount: 0,
+//   message: '',
+//   protocol41: true,
+//   changedRows: 0
+// }
+
+
+// Results can be returned either using async/await or then/catch promise syntax 
+
+let selectResult = {}
+
+try {
+    selectResult = await wsql.select("customers","*",{firstName:"Bob",lastName:"Smith"})
+    // Equivalent SQL: SELECT  * FROM customers WHERE firstName = 'Bob' AND lastName = 'Smith' 
+} catch(error) {
+    console.log(error)
+}
+
+console.log(selectResult)
+
+// OR 
+
+wsql.select("customers","*",{firstName:"Bob",lastName:"Smith"}).then(
+        result=>{selectResult=result}
+    ).catch(error=>{
+        console.log(error)
+    })
+
+
+// Select Result: [
+//   {
+//     id: 1,
+//     firstName: 'Bob',
+//     lastName: 'Smith',
+//     favoriteAnimal: 'dog'
+//   }
+// ]
+
+
+let updateResult = await wsql.update("customers",{favoriteAnimal:"cat"},{id:1})
+// Equivalent SQL: UPDATE customers SET favoriteAnimal = 'cat' WHERE id = 1 
+
+// Update Result: {
+//   fieldCount: 0,
+//   affectedRows: 1,
+//   insertId: 0,
+//   serverStatus: 2,
+//   warningCount: 0,
+//   message: '(Rows matched: 1  Changed: 1  Warnings: 0',
+//   protocol41: true,
+//   changedRows: 1
+// }
+
+
+let deleteResult = await wsql.delete("customers",{id:1})
+// Equivalent SQL: DELETE FROM customers WHERE id = 1 
+
+// Delete Result: {
+//   fieldCount: 0,
+//   affectedRows: 1,
+//   insertId: 0,
+//   serverStatus: 2,
+//   warningCount: 0,
+//   message: '',
+//   protocol41: true,
+//   changedRows: 0
+// }
+
+    
+```
 
 ## Functions
 
@@ -127,8 +212,8 @@ Select data from a table. <br><br>
 ### Example
 
 ```
-    // Equivalent SQL: SELECT 'value' FROM 'testTable' WHERE value='testValue' GROUP BY 'value' ORDER BY 'id' DESC LIMIT 10
-    let result = await wsql.select('testTable','value',{value:"testValue"},"id","DESC",10,offset=false,value)
+ // Equivalent SQL: SELECT 'value' FROM 'testTable' WHERE value='testValue' GROUP BY 'value' ORDER BY 'id' DESC LIMIT 10
+ let result = await wsql.select('testTable','value',{value:"testValue"},"id","DESC",10,offset=false,value)
 ```
 
 <br>
@@ -155,13 +240,13 @@ let result2 = await wsql.insert('insertTest',[{testData:"testInsert1"},{testData
 
 <br>
 
-### **update(table,update,where=false)**
+### **update(table,set,where=false)**
 
 <br>
 
 Update records <br><br>
 **table:** Table to update.<br>
-**update:** Object of values to update {column:"value"} <br>
+**set:** Object of values to set {column:"value"} <br>
 **where:** Object of where conditions. May Be False<br>
 
 ### Example
@@ -208,7 +293,7 @@ Count rows in result.<br><br>
 
 ```
 
-let result = await wsql.delete('testTable',{value:'testRow2'},'theCount')
+let result = await wsql.count('testTable',{value:'testRow2'},'theCount')
 
 ```
 
@@ -226,15 +311,15 @@ Submit an array of dependant SQL queries to be executed in one request. If one f
 
 ```
 
-    let queries = [
-        "SELECT * FROM testTable ORDER BY id DESC",
-        "SELECT * FROM testTable",
-    ]
+let queries = [
+    "SELECT * FROM testTable ORDER BY id DESC",
+    "SELECT * FROM testTable",
+]
 
-    let result = await wsql.transaction(queries)
+let result = await wsql.transaction(queries)
 
-    // result[0] first queries results. 
-    // result[1] second queries results.   
+// result[0] first queries results. 
+// result[1] second queries results.   
 
 ```
 
