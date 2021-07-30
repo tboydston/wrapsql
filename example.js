@@ -3,6 +3,18 @@ const Wrapsql = require('./wrapsql.js')
 const sysConfig = require('./config-test.js')
 
 
+/* Customer Table
+
+CREATE TABLE `customers` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(64) DEFAULT NULL,
+  `lastName` varchar(64) DEFAULT NULL,
+  `favoriteAnimal` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+*/
+
 ;(async()=>{
 
     const wsql = new Wrapsql({
