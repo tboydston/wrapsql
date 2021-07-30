@@ -131,15 +131,15 @@ class Wrapsql {
     /**
      * Update values in table.
      * @param {string} table Table Name.
-     * @param {object} update Update values.  
+     * @param {object} set Update values.  
      * @param {object} where Object of where conditions.
      */
-    async update(table,update,where=false){
+    async update(table,set,where=false){
 
         let query = `UPDATE ${table} SET `
 
-        for (let property in update) {
-            query += `${property} = ${this.formatString(update[property])}, `
+        for (let property in set) {
+            query += `${property} = ${this.formatString(set[property])}, `
         }
         query = query.substring(0, query.length - 2)
         query += this.addOptions(where)
